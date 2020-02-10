@@ -16,7 +16,7 @@ class GildedRose {
 
     private void update(Item item) {
         if (isLegendary(item)) return;
-        if (isBrie(item)) {
+        else if (isBrie(item)) {
             updateBrie(item);
         } else if (isBackstagePass(item)) {
             updateBackstagePass(item);
@@ -26,54 +26,38 @@ class GildedRose {
         updateSellIn(item);
     }
 
-    private void updateSellIn(Item item) {
-        item.sellIn -= 1;
-    }
-
     private void updateDefault(Item item) {
-        if (qualityAboveZero(item)) {
-            item.quality -= 1;
-        }
+        decreaseQuality(item);
         if (item.sellIn < 1) {
-            if (qualityAboveZero(item)) {
-                item.quality -= 1;
-            }
+            decreaseQuality(item);
         }
     }
 
-    private boolean updateBackstagePass(Item item) {
-        if (isBackstagePass(item)) {
-            if (underMax(item)) {
-                item.quality += 1;
-                if (isBackstagePass(item)) {
-                    if (item.sellIn < 11) {
-                        if (underMax(item)) {
-                            item.quality += 1;
-                        }
-                    }
-                    if (item.sellIn < 6) {
-                        if (underMax(item)) {
-                            item.quality += 1;
-                        }
-                    }
-                }
-            }
-            if (item.sellIn < 1) {
-                item.quality = 0;
-            }
-            return true;
-        }
-        return false;
+    private void decreaseQuality(Item item) {
+        if (qualityAboveZero(item)) item.quality -= 1;
+    }
+
+    private void updateBackstagePass(Item item) {
+        increaseQuality(item, 1);
+        if (item.sellIn <= 10) increaseQuality(item, 1);
+        if (item.sellIn <= 5) increaseQuality(item, 1);
+        if (item.sellIn <= 0) item.quality = 0;
+    }
+
+    private void increaseQuality(Item item, int i) {
+        if (underMax(item)) item.quality += i;
     }
 
     private void updateBrie(Item item) {
-        if (underMax(item)) {
-            if (item.sellIn < 1) {
-                item.quality += 2;
-            } else {
-                item.quality += 1;
-            }
+        if (item.sellIn < 1) {
+            increaseQuality(item, 2);
+        } else {
+            increaseQuality(item, 1);
         }
+    }
+
+    private void updateSellIn(Item item) {
+        item.sellIn -= 1;
     }
 
     private boolean qualityAboveZero(Item item) {
