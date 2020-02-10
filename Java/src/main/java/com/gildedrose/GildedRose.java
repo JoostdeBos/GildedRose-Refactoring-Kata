@@ -49,11 +49,8 @@ class GildedRose {
     }
 
     private void updateBrie(Item item) {
-        if (item.sellIn < 1) {
-            increaseQuality(item, 2);
-        } else {
-            increaseQuality(item, 1);
-        }
+        if (item.sellIn < 1) increaseQuality(item, 2);
+        else increaseQuality(item, 1);
     }
 
     private void updateSellIn(Item item) {
