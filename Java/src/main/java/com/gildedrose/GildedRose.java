@@ -16,14 +16,14 @@ class GildedRose {
     }
 
     private void update(Item item) {
-        if (item.name.equals("Sulfuras, Hand of Ragnaros")) return;
+        if (isLegendary(item)) return;
 
-        if (item.name.equals("Aged Brie")
-                || item.name.equals("Backstage passes to a TAFKAL80ETC concert")) {
+        if (isBrie(item)
+                || isBackstagePass(item)) {
             if (item.quality < 50) {
                 item.quality += 1;
 
-                if (item.name.equals("Backstage passes to a TAFKAL80ETC concert")) {
+                if (isBackstagePass(item)) {
                     if (item.sellIn < 11) {
                         if (item.quality < 50) {
                             item.quality += 1;
@@ -43,24 +43,36 @@ class GildedRose {
             }
         }
 
-        item.sellIn = item.sellIn - 1;
+        item.sellIn -= 1;
 
         if (item.sellIn < 0) {
-            if (item.name.equals("Aged Brie")) {
+            if (isBrie(item)) {
                 if (item.quality < 50) {
                     item.quality += 1;
                 }
             } else {
-                if (item.name.equals("Backstage passes to a TAFKAL80ETC concert")) {
+                if (isBackstagePass(item)) {
                     item.quality = 0;
                 } else {
                     if (item.quality > 0) {
 
-                        item.quality -=1;
+                        item.quality -= 1;
 
                     }
                 }
             }
         }
+    }
+
+    private boolean isBackstagePass(Item item) {
+        return item.name.equals("Backstage passes to a TAFKAL80ETC concert");
+    }
+
+    private boolean isBrie(Item item) {
+        return item.name.equals("Aged Brie");
+    }
+
+    private boolean isLegendary(Item item) {
+        return item.name.equals("Sulfuras, Hand of Ragnaros");
     }
 }
