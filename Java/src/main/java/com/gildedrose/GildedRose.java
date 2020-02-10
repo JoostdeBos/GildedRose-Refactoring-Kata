@@ -1,7 +1,6 @@
 package com.gildedrose;
 
 import java.util.Arrays;
-import java.util.Collections;
 
 class GildedRose {
     Item[] items;
@@ -17,37 +16,37 @@ class GildedRose {
 
     private void update(Item item) {
         if (isLegendary(item)) return;
+        updateQuality(item);
+        updateSellIn(item);
+    }
 
-        if (isBrie(item)
-                || isBackstagePass(item)) {
-            if (checkQualityLessThen(item)) {
+    private void updateSellIn(Item item) {
+        item.sellIn -= 1;
+    }
+
+    private void updateQuality(Item item) {
+        if (isBrie(item) || isBackstagePass(item)) {
+            if (underMax(item)) {
                 item.quality += 1;
-
                 if (isBackstagePass(item)) {
                     if (item.sellIn < 11) {
-                        if (checkQualityLessThen(item)) {
+                        if (underMax(item)) {
                             item.quality += 1;
                         }
                     }
-
                     if (item.sellIn < 6) {
-                        if (checkQualityLessThen(item)) {
+                        if (underMax(item)) {
                             item.quality += 1;
                         }
                     }
                 }
             }
-        } else {
-            if (qualityAboveZero(item)) {
-                item.quality -= 1;
-            }
+        } else if (qualityAboveZero(item)) {
+            item.quality -= 1;
         }
-
-        item.sellIn -= 1;
-
-        if (item.sellIn < 0) {
+        if (item.sellIn < 1) {
             if (isBrie(item)) {
-                if (checkQualityLessThen(item)) {
+                if (underMax(item)) {
                     item.quality += 1;
                 }
             } else {
@@ -55,9 +54,7 @@ class GildedRose {
                     item.quality = 0;
                 } else {
                     if (qualityAboveZero(item)) {
-
                         item.quality -= 1;
-
                     }
                 }
             }
@@ -68,7 +65,7 @@ class GildedRose {
         return item.quality > 0;
     }
 
-    private boolean checkQualityLessThen(Item item) {
+    private boolean underMax(Item item) {
         return item.quality < 50;
     }
 
