@@ -16,7 +16,13 @@ class GildedRose {
 
     private void update(Item item) {
         if (isLegendary(item)) return;
-        updateQuality(item);
+
+        if (isBrie(item)) {
+            updateBrie(item);
+        } else {
+            updateQuality(item);
+        }
+
         updateSellIn(item);
     }
 
@@ -25,7 +31,7 @@ class GildedRose {
     }
 
     private void updateQuality(Item item) {
-        if (isBrie(item) || isBackstagePass(item)) {
+        if (isBackstagePass(item)) {
             if (underMax(item)) {
                 item.quality += 1;
                 if (isBackstagePass(item)) {
@@ -45,18 +51,23 @@ class GildedRose {
             item.quality -= 1;
         }
         if (item.sellIn < 1) {
-            if (isBrie(item)) {
-                if (underMax(item)) {
-                    item.quality += 1;
-                }
+            if (isBackstagePass(item)) {
+                item.quality = 0;
             } else {
-                if (isBackstagePass(item)) {
-                    item.quality = 0;
-                } else {
-                    if (qualityAboveZero(item)) {
-                        item.quality -= 1;
-                    }
+                if (qualityAboveZero(item)) {
+                    item.quality -= 1;
                 }
+            }
+
+        }
+    }
+
+    private void updateBrie(Item item) {
+        if (underMax(item)) {
+            if (item.sellIn < 1) {
+                item.quality += 2;
+            } else {
+                item.quality += 1;
             }
         }
     }
